@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+
+from time import sleep
+from DATA.Ethernet import ETHERNETFRAME
+from struct import unpack
+from socket import AF_PACKET,SOCK_RAW,htons,socket
+
+
+
+def handlePacket(packet):
+    packet = ETHERNETFRAME(packet)
+    packet.show()
+
+
+
+listener = socket(AF_PACKET,SOCK_RAW,htons(3))
+
+
+run = 1 
+while run:
+    try:
+        handlePacket(listener.recv(65565))
+        sleep(0.5)
+    except KeyboardInterrupt:
+        run = 0
