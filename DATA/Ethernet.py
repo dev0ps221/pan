@@ -34,17 +34,23 @@ class ETHERNETFRAME:
             self.payload = ARPPACKET(self.data)
     
     def show(self):
-        print("/==-----------------------------------------------|") 
-        self.showText("ethernet\t:")
-        self.showText("source \t: "+self.src,1)
-        self.showText("destination \t: "+self.dst,1)
-        self.showText("appendix \t: "+self.type_,1)
+        # print("/==-----------------------------------------------|") 
         print()
-        self.showText("\t"+self.datatype+" packet",1)
-        self.payload.show()
+        self.showText("- PACKET -")
+        print()
+        self.showText("- Ethernet\t:")
+        self.showText("* source   \t: (mac) "+self.src,1)
+        self.showText("* destination \t: (mac) "+self.dst,1)
+        self.showText("* appendix \t: "+self.type_,1)
+        print()
+        if hasattr(self,"payload"):
+            self.showText("\t"+"- "+self.datatype+" packet",1)
+            self.payload.show()
 
-        print("\-----------------------------------------------==/")
-        print("Tek-Tech 2021")
+        # print("\-----------------------------------------------==/")
+        print()
+        self.showText("- Tek-Tech 2021 -",5)
+        print()
         [print() for n in range(3)]
         
     def showText(self,text,indent=0):

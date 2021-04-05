@@ -1,3 +1,6 @@
+filepref = (__file__.split("/"))
+filepref.pop()
+filepref = "/".join(filepref)+"/"
 def learnProto(line):
     details = line.split(">")
     if len(details) > 4:
@@ -31,7 +34,7 @@ def learnProto(line):
     return proto
 def learnProtos(self):
     self.learnProto = learnProto
-    with open("/home/x/h4ck3d/scripting/sniff3r/protos") as protos:
+    with open(filepref+"../protos") as protos:
         lines = protos.readlines()
         for line in lines:
             self.protocols.append(self.learnProto(line))
@@ -64,7 +67,7 @@ def cleanMac(self,mac):
 
 
 def learnEthertypes(self):
-    with open("/home/x/h4ck3d/scripting/sniff3r/etherTypes") as ethertypes:
+    with open(filepref+"../etherTypes") as ethertypes:
         lines = ethertypes.readlines()
         labels = lines[0].split(",")
         lines  = lines[1:]
@@ -82,6 +85,27 @@ def learnEthertypes(self):
             ret.append(etherType)
         return ret
 
+def learnPorts(self):
+    with open(filepref+"../ports") as ports:
+        lines = ports.readlines()
+        labels = lines[0].split(",")
+        lines  = lines[1:]
+        ret = []
+        for line in lines:
+            port = {}
+            line = line.split(",")
+            n = 0
+            for label in labels:
+                if ")" in label.lower() and ")" in label.lower(): 
+                    port[label.lower().split(")")[0].split("(")[1]] = line[n] if n < len(line) else "unknown" 
+                else:
+                    port[label.lower()] = line[n] if n < len(line) else "unknown"
+                n+=1
+            ret.append(port)
+        self.ports = ret
+        return ret
+
+
 def getEtherTypeByHex(self,hexcode):
     ret = None
     for etherType in self.etherTypes:
@@ -93,4 +117,11 @@ def getEtherTypeByName(self,name):
     for etherType in self.etherTypes:
         if etherType['name'] == name: ret = etherType
     return ret
+
+def getPortByNumber(self,number):
+    ret = None
+    for port in self.ports:
+        if port['port number'] == number: ret = port
+    return ret
+    
     
