@@ -1,22 +1,35 @@
 #!/usr/bin/env python3
-
+from hexdump import hexdump
 from time import sleep
 from DATA.Ethernet import ETHERNETFRAME
 from struct import unpack
 from socket import AF_PACKET,SOCK_RAW,htons,socket
 
 
+def showText(text,indent=0):
+    print('\t'*indent,text)
 
 def handlePacket(packet):
-    packet = ETHERNETFRAME(packet)
+    data = packet
+    packet = ETHERNETFRAME(data)
+
+    showText("- PACKET -")
+    print()
     packet.show()
+    showText("- HEXADECIMAL DUMP -")
+    print()
+    hexdump(data)
+    showText("- Tek-Tech 2021 -",5)
+    print()
+    print()
+    [print() for n in range(3)]
 
 
 
 listener = socket(AF_PACKET,SOCK_RAW,htons(3))
 
 
-run = 1 
+run = 1
 while run:
     try:
         handlePacket(listener.recv(65565))

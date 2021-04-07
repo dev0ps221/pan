@@ -1,3 +1,5 @@
+from binascii import hexlify
+
 filepref = (__file__.split("/"))
 filepref.pop()
 filepref = "/".join(filepref)+"/"
@@ -23,7 +25,7 @@ def learnProto(line):
         rfc = "unknown"
         protocol = "unknown"
         keyword = "unknown"
-            
+
     proto = {
         "hexcode":hexcode,
         "protonumber":protonumber,
@@ -77,8 +79,8 @@ def learnEthertypes(self):
             line = line.split(",")
             n = 0
             for label in labels:
-                if ")" in label.lower() and ")" in label.lower(): 
-                    etherType[label.lower().split(")")[0].split("(")[1]] = line[n] if n < len(line) else "unknown" 
+                if ")" in label.lower() and ")" in label.lower():
+                    etherType[label.lower().split(")")[0].split("(")[1]] = line[n] if n < len(line) else "unknown"
                 else:
                     etherType[label.lower()] = line[n] if n < len(line) else "unknown"
                 n+=1
@@ -96,8 +98,8 @@ def learnPorts(self):
             line = line.split(",")
             n = 0
             for label in labels:
-                if ")" in label.lower() and ")" in label.lower(): 
-                    port[label.lower().split(")")[0].split("(")[1]] = line[n] if n < len(line) else "unknown" 
+                if ")" in label.lower() and ")" in label.lower():
+                    port[label.lower().split(")")[0].split("(")[1]] = line[n] if n < len(line) else "unknown"
                 else:
                     port[label.lower()] = line[n] if n < len(line) else "unknown"
                 n+=1
@@ -111,7 +113,7 @@ def getEtherTypeByHex(self,hexcode):
     for etherType in self.etherTypes:
         if etherType['hex'] == hexcode: ret = etherType
     return ret
-    
+
 def getEtherTypeByName(self,name):
     ret = None
     for etherType in self.etherTypes:
@@ -123,5 +125,24 @@ def getPortByNumber(self,number):
     for port in self.ports:
         if port['port number'] == number: ret = port
     return ret
-    
-    
+
+
+def hexDataToString(data):
+    ret = ""
+    n = 0
+    char = ""
+    if len(data):
+        for elem in range(len(data)):
+            if elem == "" or elem == " ":
+                ret += " "
+            else:
+                if n == 2:
+                    char = str(chr(int(hexlify(char.encode()).decode())))
+                    ret += char
+                    n = 0
+                    char = ""
+                else:
+                    char += data[n]
+            n+=1
+
+    return ret

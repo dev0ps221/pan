@@ -1,6 +1,6 @@
 from binascii import hexlify
-from .Ip import IPPACKET,IP6PACKET 
-from .Arp import ARPPACKET 
+from .Ip import IPPACKET,IP6PACKET
+from .Arp import ARPPACKET
 class ETHERNETFRAME:
 
 
@@ -32,12 +32,9 @@ class ETHERNETFRAME:
             self.payload = IP6PACKET(self.data)
         if self.datatype == 'arp':
             self.payload = ARPPACKET(self.data)
-    
+
     def show(self):
-        # print("/==-----------------------------------------------|") 
-        print()
-        self.showText("- PACKET -")
-        print()
+        # print("/==-----------------------------------------------|")
         self.showText("- Ethernet\t:")
         self.showText("* source   \t: (mac) "+self.src,1)
         self.showText("* destination \t: (mac) "+self.dst,1)
@@ -48,17 +45,12 @@ class ETHERNETFRAME:
             self.payload.show()
 
         # print("\-----------------------------------------------==/")
-        print()
-        self.showText("- Tek-Tech 2021 -",5)
-        print()
-        [print() for n in range(3)]
-        
     def showText(self,text,indent=0):
         print('\t'*indent,text)
 
     def setPacketType(self):
         self.datatype = self.checkPacketType()
-        
+
     def checkPacketType(self):
         ethernettype = ""
         if self.type_ == "0806":

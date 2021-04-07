@@ -34,22 +34,22 @@ class ARPPACKET:
             self.optype = 'REQUEST'
         else:
             self.optype = 'REPLY'
-        
 
-    def show(self): 
+
+    def show(self):
         self.showText(self.optype,3)
         print()
         if(self.optype == 'REQUEST'):
-            self.showText(""+self.src+" a "+self.srcmac+" demande :",2)
+            self.showText(""+self.src+" demande a "+self.dst+" :",2)
             print()
-            self.showText("ou est "+self.dst+" ?",4)
+            self.showText("ou est "+self.srcmac+" ?",4)
             print()
         if(self.optype == 'REPLY'):
-            self.showText(""+self.src+" a "+self.srcmac+" fait savoir que :",2)
+            self.showText(""+self.src+" fait savoir a "+self.dst+" que :",2)
             print()
-            self.showText(self.dst+" est a "+self.dstmac,4)
+            self.showText(self.src+" est a "+self.srcmac,4)
             print()
-            
-        
+
+
     def showText(self,text,indent=0):
         print('\t'*indent,text)
