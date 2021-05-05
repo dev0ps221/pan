@@ -10,14 +10,12 @@ class TCPSEGMENT:
     ports = []
 
     def __init__(self,data):
-
-
-
-
+        """
+            INIT TCP SEGMENT :
+            TAKES RAW TCP DATA , PARSES IT AND RETURNS A TCP SEGMENT WITH HEADERS FLAGS, AND THE DATA
+            TYPE help(TCPSEGMENT) for more info
+        """
         src,dst,seqnum,acknum,offsetreservedflags = unpack("!2H2LH",data[:14])
-
-        # urg,ack,psh,rst,syn,fin = map(lambda x : [n for n in x],flags)
-        # window = interm[6:]
         hlen = (offsetreservedflags >> 12) * 4
         urg = (offsetreservedflags & 32) * 5
         ack = (offsetreservedflags & 16) * 4
@@ -42,13 +40,20 @@ class TCPSEGMENT:
         for protocol in self.application:
             if protocol:
                 self.application = protocol
+        if type(self.application) != list:
+            try :
+                if self.application["port number"]:
+                    self.application['port number'] = int(self.application['port number'])
 
-        if  self.application:
-            self.application['port number'] = int(self.application['port number'])
-
-            if self.application['description'].lower() == "http":
-                self.httppayload = HTTPPAYLOAD(self.data,"REQUEST" if self.dst == self.application['port number'] else " RESPONSE")
-
+                    if self.application['description'].lower() == "http":
+                        self.httppayload = HTTPPAYLOAD(self.data,"REQUEST" if self.dst == self.application['port number'] else " RESPONSE")
+                
+                else:
+                    print('ki nena')
+                    print(self.application['description'].lower())
+            except TypeError as e:
+                print(e)
+                print(self.application)
     def show(self):
         print("")
         self.showText("-Tcp Segment",4)
@@ -56,18 +61,24 @@ class TCPSEGMENT:
         self.showText("destination \t: (port) "+str(self.dst),5)
         print()
         print()
-        if self.application:
-            self.showText(self.application['description'] + "{}".format("REQUEST" if self.dst == self.application['port number'] else " RESPONSE") )
 
-            if self.application['description'].lower() == "http":
-                self.httppayload.show()
+        try :
+            if type(self.application) is not list and self.application["port number"]:
+
+                self.showText(self.application['description'] + "{}".format("REQUEST" if self.dst == self.application['port number'] else " RESPONSE") )
+
+                if self.application['description'].lower() == "http":
+                    self.httppayload.show()
+                else:
+                    print(self.application['description'].lower())
+                    data = self.data
+                    self.showText(hexDataToString(hexlify(data).decode()),1)
+                # data = [data.headers(),data.body_file.read()]
             else:
                 data = self.data
                 self.showText(hexDataToString(hexlify(data).decode()),1)
-            # data = [data.headers(),data.body_file.read()]
-        else:
-            data = self.data
-            self.showText(hexDataToString(hexlify(data).decode()),1)
+        except TypeError as e:
+            print(e)
 
         print()
         print()

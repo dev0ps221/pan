@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+from ifaces import IFACES
 from hexdump import hexdump
 from time import sleep
 from DATA.Ethernet import ETHERNETFRAME
 from struct import unpack
 from socket import AF_PACKET,SOCK_RAW,htons,socket
+import autologo
 
 
 def showText(text,indent=0):
@@ -14,11 +16,11 @@ def handlePacket(packet):
     packet = ETHERNETFRAME(data)
 
     showText("- PACKET -")
-    print()
+    # print(data)
     packet.show()
-    showText("- HEXADECIMAL DUMP -")
+    # showText("- HEXADECIMAL DUMP -")
     print()
-    hexdump(data)
+    # hexdump(data)
     showText("- Tek-Tech 2021 -",5)
     print()
     print()

@@ -10,7 +10,7 @@ class UDPDATAGRAM:
 
 
     def __init__(self,data):
-        
+
         src,dst = unpack("!2H",data[:4])
         self.src = src
         self.dst = dst
@@ -21,27 +21,30 @@ class UDPDATAGRAM:
         self.data = data[8:]
 
 
-        if self.application:
-            if self.application['description'].lower() == "http":
-                # "http stuff here" 
-                "http stuff here" 
-            if self.application['description'].lower() == "bootstrap protocol server":    
-                self.bootppacket = BOOTPPACKET(self.data)
-    
-    def show(self): 
+        if type(self.application) != list:
+            if hasattr(self.application,'description'):
+                if self.application['description'].lower() == "http":
+                    # "http stuff here"
+                    "http stuff here"
+                if self.application['description'].lower() == "bootstrap protocol server":
+                    self.bootppacket = BOOTPPACKET(self.data)
+    def show(self):
         print("")
         self.showText("Udp Datagram",4)
         self.showText("source \t: (port) "+str(self.src),5)
         self.showText("destination \t: (port) "+str(self.dst),5)
+
         print()
-        if self.application:
+        if type(self.application) != list:
             if self.application['description'].lower() == "domain name server" :
-                self.showText(self.application['description'] + "{}".format("REQUEST" if self.dst == self.application['port number'] else " RESPONSE"),5) 
+                self.showText(self.application['description'] + "{}".format("REQUEST" if self.dst == self.application['port number'] else " RESPONSE"),5)
                 data = DNSRecord.parse(self.data)
                 for line in str(data).split("\n"):
                     self.showText(line,6)
             elif self.application['description'].lower() == "bootstrap protocol server":
                 self.bootppacket.show()
+            elif self.application['description'].lower() == "HTTPSREQUEST":
+                print('we are here')
             else:
                 self.showText(self.application['description'] + "{}".format("REQUEST" if self.dst == self.application['port number'] else " RESPONSE") )
         else:
@@ -49,7 +52,7 @@ class UDPDATAGRAM:
 
         print()
         print()
-    
+
     def showText(self,text,indent=0):
         print('\t'*indent,text)
 

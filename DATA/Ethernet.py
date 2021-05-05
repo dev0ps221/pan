@@ -19,8 +19,8 @@ class ETHERNETFRAME:
 
     def __init__(self,data):
         self.data = data[14:]
-        self.src = self.cleanMac(data[:6])
-        self.dst = self.cleanMac(data[6:12])
+        self.dst = self.cleanMac(data[:6])
+        self.src = self.cleanMac(data[6:12])
         self.type_ = hexlify(data[12:14]).decode()
         self.setPacketType()
         self.setPayload()
