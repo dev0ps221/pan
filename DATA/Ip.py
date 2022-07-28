@@ -6,6 +6,7 @@ from .learn import *
 from .Tcp import TCPSEGMENT
 from .Udp import UDPDATAGRAM
 from .Icmp import ICMPPACKET
+from kaitaistruct import KaitaiStream, BytesIO
 class IPPACKET:
 
     protocols = []
@@ -83,6 +84,14 @@ class IP6PACKET:
 
 
     def __init__(self,data):
+
+
+        d = 
+        print(d)
+
+
+
+
         details = data[:1]
         version,ihl = hexlify(details).decode()[0],hexlify(details).decode()[1]
         details = unpack('!s2s5s4s2s2s',data[:16])
@@ -91,19 +100,20 @@ class IP6PACKET:
         self.ihl = ihl
         sdata = hexlify(data).decode()
         vers,prio,flo,plen,nh,hl = sdata[0:3],sdata[4:11],sdata[12:31],sdata[32:47],sdata[48:55],sdata[56:63]
-        # print(details)
+        print(details)
+        print(len(sdata))
         if((sdata[64:72]) != "00000000"):
-            self.src = f"{IPv6Address(unhexlify(sdata[64:191]))}"
+            srcstop = int(64+15)
+            self.src = f"{IPv6Address(unhexlify(sdata[64:int(srcstop)]))}"
             self.protocol = "0x"+sdata[192:194]
             self.datastart = 194
+            dststop = int(192+15)
+            self.dst = f'{IPv6Address(unhexlify(sdata[192:int(dststop)]))}'
         else:
             self.src = "::::::::"
+            self.dst = "::::::::"
             self.protocol = "0x"+sdata[72:74]
             self.datastart = 74
-        if((sdata[64:72]) != "00000000"):
-            self.dst = f'{IPv6Address(unhexlify(sdata[192:295]))}'
-        else:
-            self.dst = "::::::::"
 
         self.srchostname = ["unknown host"]
         self.dsthostname = ["unknown host"]
