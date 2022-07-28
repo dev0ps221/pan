@@ -91,22 +91,19 @@ class IP6PACKET:
         vers,prio,flo,plen,nh,hl=details
         self.version = version
         self.ihl = ihl
+        print(hexlify(nh),'is nh')
         sdata = hexlify(data).decode()
         vers,prio,flo,plen,nh,hl = sdata[0:3],sdata[4:11],sdata[12:31],sdata[32:47],sdata[48:55],sdata[56:63]
-        if((sdata[66:72]) != "00000000"):
-            srcstop = int(66+32)
-            src = sdata[66:int(srcstop)]
-            self.src = f"{IPv6Address(unhexlify(src))}"
-            dststop = int(srcstop+32)
-            self.protocol = "0x"+sdata[dststop:dststop+2]
-            print(self.protocol)
-            self.datastart = dststop+4
-            self.dst = f'{IPv6Address(unhexlify(sdata[int(srcstop):int(dststop)]))}'
-        else:
-            self.src = "::::::::"
-            self.dst = "::::::::"
-            self.protocol = "0x"+sdata[72:74]
-            self.datastart = 74
+        srcstop = int(74+32)
+        src = sdata[74:int(srcstop)]
+        self.src = f"{IPv6Address(unhexlify(src))}"
+        dststop = int(srcstop+32)
+        self.protocol = "0x"+sdata[dststop:parseInt(dststop+2)]
+        print(self.protocol)
+        print(self.src)
+        self.dst = f'{IPv6Address(unhexlify(sdata[int(srcstop):int(dststop)]))}'
+        # self.protocol = "0x"+sdata[72:74]
+        self.datastart = dststop+4
 
         self.srchostname = ["unknown host"]
         self.dsthostname = ["unknown host"]
