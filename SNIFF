@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from scapy.all import sniff
 from ifaces import IFACES
 from hexdump import hexdump
 from time import sleep
@@ -12,7 +13,7 @@ def showText(text,indent=0):
     print('\t'*indent,text)
 
 def handlePacket(packet):
-    data = packet
+    data = packet.original
     packet = ETHERNETFRAME(data)
 
     showText("- PACKET -")
@@ -25,7 +26,7 @@ def handlePacket(packet):
     print()
     print()
     [print() for n in range(3)]
-
+    sleep(0.5)
 
 
 listener = socket(AF_PACKET,SOCK_RAW,htons(3))
@@ -34,7 +35,8 @@ listener = socket(AF_PACKET,SOCK_RAW,htons(3))
 run = 1
 while run:
     try:
-        handlePacket(listener.recv(65565))
-        sleep(0.5)
+        sniff(prn=handlePacket)
+        # handlePacket(listener.recv(65565))
+        # sleep(0.5)
     except KeyboardInterrupt:
         run = 0
