@@ -132,13 +132,13 @@ class IP6PACKET:
         print(details)
         print(len(sdata))
         if((sdata[64:72]) != "00000000"):
-            srcstop = int(71+32)
-            src = sdata[71:int(srcstop)]
+            srcstop = int(64+32)
+            src = sdata[64:int(srcstop)]
             self.src = f"{IPv6Address(unhexlify(src))}"
             dststop = int(srcstop+32)
             self.protocol = "0x"+sdata[dststop:dststop+2]
             print(self.protocol)
-            self.datastart = dststop+2
+            self.datastart = dststop+4
             self.dst = f'{IPv6Address(unhexlify(sdata[int(srcstop):int(dststop)]))}'
         else:
             self.src = "::::::::"
