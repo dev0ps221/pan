@@ -98,7 +98,7 @@ class IP6PACKET:
         src = sdata[74:int(srcstop)]
         self.src = f"{IPv6Address(unhexlify(src))}"
         dststop = int(srcstop+32)
-        self.protocol = "0x"+sdata[dststop:parseInt(dststop+2)]
+        self.protocol = "0x"+sdata[dststop:int(dststop+2)]
         print(self.protocol)
         print(self.src)
         self.dst = f'{IPv6Address(unhexlify(sdata[int(srcstop):int(dststop)]))}'

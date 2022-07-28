@@ -5,7 +5,7 @@ def clearScreen():
 	system("clear")
 class IFACES:
 	ifaces   = interfaces()
-	defaultgateway,gateways = gateways()
+	defaultgateway,gateways = gateways() if len((gateways()))==2  else None,None
 	addrs    = {}
 	selectedIFACE = 0
 	def __init__(self):

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from binascii import hexlify
+from struct import unpack
 
 class ICMPPACKET:
     def __init__(self,data):
