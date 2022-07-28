@@ -7,33 +7,6 @@ from .Tcp import TCPSEGMENT
 from .Udp import UDPDATAGRAM
 from .Icmp import ICMPPACKET
 
-import kaitaistruct
-from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-
-
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
-
-# import protocol_body
-class Ipv6Packet(KaitaiStruct):
-    def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
-        self._parent = _parent
-        self._root = _root if _root else self
-        self._read()
-
-    def _read(self):
-        self.version = self._io.read_bits_int_be(4)
-        self.traffic_class = self._io.read_bits_int_be(8)
-        self.flow_label = self._io.read_bits_int_be(20)
-        self._io.align_to_byte()
-        self.payload_length = self._io.read_u2be()
-        self.next_header_type = self._io.read_u1()
-        self.hop_limit = self._io.read_u1()
-        self.src_ipv6_addr = self._io.read_bytes(16)
-        self.dst_ipv6_addr = self._io.read_bytes(16)
-        # self.next_header = protocol_body.ProtocolBody(self.next_header_type, self._io)
-        self.rest = self._io.read_bytes_full()
 
 class IPPACKET:
 
@@ -112,15 +85,6 @@ class IP6PACKET:
 
 
     def __init__(self,data):
-
-
-        d = Ipv6Packet(KaitaiStream(BytesIO(data)))
-        print(len(hexlify(d.src_ipv6_addr).decode()))
-        print(len(hexlify(d.dst_ipv6_addr).decode()))
-
-
-
-
         details = data[:1]
         version,ihl = hexlify(details).decode()[0],hexlify(details).decode()[1]
         details = unpack('!s2s5s4s2s2s',data[:16])
@@ -129,11 +93,9 @@ class IP6PACKET:
         self.ihl = ihl
         sdata = hexlify(data).decode()
         vers,prio,flo,plen,nh,hl = sdata[0:3],sdata[4:11],sdata[12:31],sdata[32:47],sdata[48:55],sdata[56:63]
-        print(details)
-        print(len(sdata))
-        if((sdata[64:72]) != "00000000"):
-            srcstop = int(64+32)
-            src = sdata[64:int(srcstop)]
+        if((sdata[66:72]) != "00000000"):
+            srcstop = int(66+32)
+            src = sdata[66:int(srcstop)]
             self.src = f"{IPv6Address(unhexlify(src))}"
             dststop = int(srcstop+32)
             self.protocol = "0x"+sdata[dststop:dststop+2]
