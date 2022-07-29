@@ -40,3 +40,5 @@ while run:
         # sleep(0.5)
     except KeyboardInterrupt:
         run = 0
+    except Exception as e:
+        print(e)
