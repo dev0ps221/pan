@@ -17,7 +17,8 @@ class ETHERNETFRAME:
         return cleanmac
 
 
-    def __init__(self,data):
+    def __init__(self,data,raw):
+        self.scapypack = scapypack
         self.data = data[14:]
         self.dst = self.cleanMac(data[:6])
         self.src = self.cleanMac(data[6:12])

@@ -14,8 +14,7 @@ def showText(text,indent=0):
 
 def handlePacket(packet):
     data = packet.original
-    packet = ETHERNETFRAME(data)
-
+    packet = ETHERNETFRAME(data,packet)
     showText("- PACKET -")
     # print(data)
     packet.show()
