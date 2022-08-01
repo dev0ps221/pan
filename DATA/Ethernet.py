@@ -1,4 +1,5 @@
 from binascii import hexlify
+from hexdump import hexdump
 from .Ip import IPPACKET,IP6PACKET
 from .Arp import ARPPACKET
 class ETHERNETFRAME:
@@ -18,6 +19,7 @@ class ETHERNETFRAME:
 
 
     def __init__(self,data,raw):
+        self.rawdata = data
         self.scapypack = raw
         self.data = data[14:]
         self.dst = self.cleanMac(data[:6])
@@ -44,8 +46,9 @@ class ETHERNETFRAME:
         if hasattr(self,"payload"):
             self.showText("\t"+"- "+self.datatype+" packet",1)
             self.payload.show()
+        print(hexdump(self.rawdata))
+        print("\-----------------------------------------------==/")
 
-        # print("\-----------------------------------------------==/")
     def showText(self,text,indent=0):
         print('\t'*indent,text)
 
