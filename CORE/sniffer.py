@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
 
+from scapy.all import sniff
 class Sniffer:
 
 
     run = True
    
+    def showText(text,indent=0):
+        print('\t'*indent,text)
+
 
     
     def handlePacket(packet):
         data = packet.original
         packet = ETHERNETFRAME(data,packet)
-        showText("- PACKET -")
+        self.showText("- PACKET -")
         # print(data)
         packet.show()
-        # showText("- HEXADECIMAL DUMP -")
+        # self.showText("- HEXADECIMAL DUMP -")
         print()
         # hexdump(data)
-        showText("- Tek-Tech 2021 -",5)
+        self.showText("- Tek-Tech 2021 -",5)
         print()
         print()
         [print() for n in range(3)]
