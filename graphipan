@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+
+from CORE.UI.UI import *
+from CORE.sniffer import Sniffer
+
+app = PanUI()
+app.setSniffer(Sniffer())

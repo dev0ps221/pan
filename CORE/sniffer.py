@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+from .autologo import *
 from hexdump import hexdump
 from time import sleep
 from scapy.all import sniff
@@ -15,8 +15,6 @@ class Sniffer:
 
     
     def handlePacket(self,packet):
-        data = packet.original
-        packet = ETHERNETFRAME(data,packet)
         self.showText("- PACKET -")
         # print(data)
         packet.show()
@@ -29,17 +27,21 @@ class Sniffer:
         [print() for n in range(3)]
         sleep(0.5)
 
-
-
-
+    def set_handler(self,handler):
+        self.handler = handler
+    
     def get_handler(self):
         return self.handler if hasattr(self,'handler') and self.handler!=None else self.handlePacket
 
     def start(self):
-    
+        def process_packet(packet):
+            data = packet.original
+            packet = ETHERNETFRAME(data,packet)
+            self.get_handler()(packet)
+
         while self.run:
             try:
-                sniff(prn=self.get_handler())
+                sniff(prn=process_packet)
                 # handlePacket(listener.recv(65565))
                 # sleep(0.5)
             except KeyboardInterrupt:
@@ -49,7 +51,5 @@ class Sniffer:
 
 
     def __init__(self,handler=None):
-        self.handler = handler
+        self.set_handler(handler)
         
-s = Sniffer()
-s.start()
