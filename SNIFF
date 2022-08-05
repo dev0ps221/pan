@@ -1,43 +1,6 @@
 #!/usr/bin/env python3
-from scapy.all import sniff
-from ifaces import IFACES
-from hexdump import hexdump
-from time import sleep
-from DATA.Ethernet import ETHERNETFRAME
-from struct import unpack
-from socket import AF_PACKET,SOCK_RAW,htons,socket
-import autologo
+from CORE.sniffer import Sniffer
 
 
-def showText(text,indent=0):
-    print('\t'*indent,text)
-
-def handlePacket(packet):
-    data = packet.original
-    packet = ETHERNETFRAME(data,packet)
-    showText("- PACKET -")
-    # print(data)
-    packet.show()
-    # showText("- HEXADECIMAL DUMP -")
-    print()
-    # hexdump(data)
-    showText("- Tek-Tech 2021 -",5)
-    print()
-    print()
-    [print() for n in range(3)]
-    sleep(0.5)
-
-
-listener = socket(AF_PACKET,SOCK_RAW,htons(3))
-
-
-run = 1
-while run:
-    try:
-        sniff(prn=handlePacket)
-        # handlePacket(listener.recv(65565))
-        # sleep(0.5)
-    except KeyboardInterrupt:
-        run = 0
-    except Exception as e:
-        print(e)
+sniffer = Sniffer()
+sniffer.start()

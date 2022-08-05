@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 
+from hexdump import hexdump
+from time import sleep
 from scapy.all import sniff
+from .DATA.Ethernet import ETHERNETFRAME
 class Sniffer:
 
 
     run = True
    
-    def showText(text,indent=0):
+    def showText(self,text,indent=0):
         print('\t'*indent,text)
 
 
     
-    def handlePacket(packet):
+    def handlePacket(self,packet):
         data = packet.original
         packet = ETHERNETFRAME(data,packet)
         self.showText("- PACKET -")
@@ -30,7 +33,7 @@ class Sniffer:
 
 
     def get_handler(self):
-        return self.handler if hasattr(self,'handler') else self.handlePacket
+        return self.handler if hasattr(self,'handler') and self.handler!=None else self.handlePacket
 
     def start(self):
     
@@ -48,3 +51,5 @@ class Sniffer:
     def __init__(self,handler=None):
         self.handler = handler
         
+s = Sniffer()
+s.start()
