@@ -4,9 +4,29 @@ class Sniffer:
 
 
     run = True
+   
+
+    
+    def handlePacket(packet):
+        data = packet.original
+        packet = ETHERNETFRAME(data,packet)
+        showText("- PACKET -")
+        # print(data)
+        packet.show()
+        # showText("- HEXADECIMAL DUMP -")
+        print()
+        # hexdump(data)
+        showText("- Tek-Tech 2021 -",5)
+        print()
+        print()
+        [print() for n in range(3)]
+        sleep(0.5)
+
+
+
 
     def get_handler(self):
-        return self.handler if hasattr('handler',self)
+        return self.handler if hasattr(self,'handler') else self.handlePacket
 
     def start(self):
     
@@ -21,6 +41,6 @@ class Sniffer:
                 print(e)
 
 
-    def __init__(self,handler):
+    def __init__(self,handler=None):
         self.handler = handler
         
