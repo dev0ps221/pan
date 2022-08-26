@@ -4,4 +4,4 @@ from CORE.UI.UI import *
 from CORE.sniffer import Sniffer
 
 app = PanUI()
-app.setSniffer(Sniffer())
+# app.setSniffer(Sniffer())

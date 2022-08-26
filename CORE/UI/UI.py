@@ -51,6 +51,7 @@ class PanUI:
         
     def ui_handler(self,page:Page):
         self.ui_page = page
+        self.build_ui_parts()
         pass
 
     def __init__(self):
